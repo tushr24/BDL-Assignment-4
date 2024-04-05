@@ -1,0 +1,7 @@
+dvc stage add -f -n download -d download.py -p global.Year -p global.dir_download -p global.cols_filter -p download.html_filename -p download.n_locs -p download.base_url -o ncei_data/ python download.py
+
+dvc stage add -f -n prepare -d prepare.py -d ncei_data -p global.Year -p global.dir_download -p global.hourly_cols -p global.cols_filter -p prepare.get_dir -o data/gt python prepare.py
+
+dvc stage add -f -n process -d process.py -d ncei_data -p global.dir_download -p global.hourly_cols -p prepare.get_dir -p process.calc_dir -o data/calculated python process.py
+
+dvc stage add -f -n evaluate -d evaluate.py -d data -p global.cols_filter -p prepare.get_dir -o R2results.csv python evaluate.py

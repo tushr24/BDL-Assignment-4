@@ -1,0 +1,49 @@
+stages:
+  download:
+    cmd: python download.py
+    deps:
+    - download.py
+    params:
+    - download.base_url
+    - download.html_filename
+    - download.n_locs
+    - global.Year
+    - global.cols_filter
+    - global.dir_download
+    outs:
+    - ncei_data/
+  prepare:
+    cmd: python prepare.py
+    deps:
+    - ncei_data
+    - prepare.py
+    params:
+    - global.Year
+    - global.cols_filter
+    - global.dir_download
+    - global.hourly_cols
+    - prepare.get_dir
+    outs:
+    - data/gt
+  process:
+    cmd: python process.py
+    deps:
+    - ncei_data
+    - process.py
+    params:
+    - global.dir_download
+    - global.hourly_cols
+    - prepare.get_dir
+    - process.calc_dir
+    outs:
+    - data/calculated
+  evaluate:
+    cmd: python evaluate.py
+    deps:
+    - data
+    - evaluate.py
+    params:
+    - global.cols_filter
+    - prepare.get_dir
+    outs:
+    - R2results.csv
